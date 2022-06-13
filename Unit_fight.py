@@ -98,9 +98,8 @@ def ttk(unit_1, unit_2):
             else:
                 current_health = current_health - 1 - bonus(unit_1,unit_2)
     time_to_kill = (hits - 1) * unit_2['rof']
-    
+    # Assumes both units attack at same time, time starts when first hit is registered.
     # results = {'time to kill' : time_to_kill}
-
     return time_to_kill
 
 def bonus(unit_1, unit_2):
@@ -112,13 +111,14 @@ def bonus(unit_1, unit_2):
     return damage
 
 def health_remaining(unit_1, unit_2):
+    # not used, incorporated code into fight function
     if ttk(unit_1, unit_2) > ttk(unit_2, unit_1):
         return unit_1['health'] - (((ttk(unit_2, unit_1) - (ttk(unit_2, unit_1) % unit_2['rof']))/unit_2['rof']) * (unit_2['melee_damage'] + bonus(unit_1,unit_2)))
     elif ttk(unit_2, unit_1) > ttk(unit_1, unit_2):
         return unit_2['health'] - (((ttk(unit_1, unit_2) - (ttk(unit_1, unit_2) % unit_1['rof']))/unit_1['rof']) * (unit_1['melee_damage'] + bonus(unit_2,unit_1)))
 
 
-# print(ttk(camel_rider, camel_rider))
+print(ttk(knight, camel_rider))
         
 # print(ttk(knight, pikeman))
 
@@ -130,12 +130,13 @@ def health_remaining(unit_1, unit_2):
 
 def fight(unit_1, unit_2):
     if ttk(unit_1, unit_2) > ttk(unit_2, unit_1):
-        health1 = unit_1['health'] - (((ttk(unit_2, unit_1) - (ttk(unit_2, unit_1) % unit_2['rof']))/unit_2['rof']) * (unit_2['melee_damage'] + bonus(unit_1,unit_2) - unit_1['melee_armour']))
+        health1 = unit_1['health'] - ((((ttk(unit_2, unit_1) - (ttk(unit_2, unit_1) % unit_2['rof']))/unit_2['rof']) + 1) * (unit_2['melee_damage'] + bonus(unit_1,unit_2) - unit_1['melee_armour']))
         print(unit_1['name'] + ' is victorious, with ' + str(health1) + ' health remaining' )
     elif ttk(unit_2, unit_1) > ttk(unit_1, unit_2):
-        health2 = unit_2['health'] - (((ttk(unit_1, unit_2) - (ttk(unit_1, unit_2) % unit_1['rof']))/unit_1['rof']) * (unit_1['melee_damage'] + bonus(unit_2,unit_1) - unit_2['melee_armour']))
+        health2 = unit_2['health'] - (((ttk(unit_1, unit_2) - (ttk(unit_1, unit_2) % unit_1['rof']))/unit_1['rof'] + 1) * (unit_1['melee_damage'] + bonus(unit_2,unit_1) - unit_2['melee_armour']))
         print(unit_2['name'] + ' is victorious, with ' + str(health2) + ' health remaining')
     else:
         print('Draw')
 
-fight(knight, camel_rider)     
+fight(knight, camel_rider)
+

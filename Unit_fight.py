@@ -97,7 +97,7 @@ def ttk(unit_1, unit_2):
                 current_health = current_health + unit_1['pierce_armour'] - unit_2['pierce_damage'] - bonus(unit_1,unit_2)
             else:
                 current_health = current_health - 1 - bonus(unit_1,unit_2)
-    time_to_kill = (hits - 1) * unit_2['rof']
+    time_to_kill = hits * unit_2['rof']
     # Assumes both units attack at same time, time starts when first hit is registered.
     # results = {'time to kill' : time_to_kill}
     return time_to_kill
@@ -130,10 +130,10 @@ print(ttk(knight, camel_rider))
 
 def fight(unit_1, unit_2):
     if ttk(unit_1, unit_2) > ttk(unit_2, unit_1):
-        health1 = unit_1['health'] - ((((ttk(unit_2, unit_1) - (ttk(unit_2, unit_1) % unit_2['rof']))/unit_2['rof']) + 1) * (unit_2['melee_damage'] + bonus(unit_1,unit_2) - unit_1['melee_armour']))
+        health1 = unit_1['health'] - ((((ttk(unit_2, unit_1) - (ttk(unit_2, unit_1) % unit_2['rof']))/unit_2['rof'])) * (unit_2['melee_damage'] + bonus(unit_1,unit_2) - unit_1['melee_armour']))
         print(unit_1['name'] + ' is victorious, with ' + str(health1) + ' health remaining' )
     elif ttk(unit_2, unit_1) > ttk(unit_1, unit_2):
-        health2 = unit_2['health'] - (((ttk(unit_1, unit_2) - (ttk(unit_1, unit_2) % unit_1['rof']))/unit_1['rof'] + 1) * (unit_1['melee_damage'] + bonus(unit_2,unit_1) - unit_2['melee_armour']))
+        health2 = unit_2['health'] - (((ttk(unit_1, unit_2) - (ttk(unit_1, unit_2) % unit_1['rof']))/unit_1['rof']) * (unit_1['melee_damage'] + bonus(unit_2,unit_1) - unit_2['melee_armour']))
         print(unit_2['name'] + ' is victorious, with ' + str(health2) + ' health remaining')
     else:
         print('Draw')
